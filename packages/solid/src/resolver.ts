@@ -1,4 +1,3 @@
-import { isWeb } from './isWeb';
 import type {
   CSSObject,
   ITheme,
@@ -160,7 +159,7 @@ export function checkAndPush(item: any, ret: any, keyToCheck: any) {
   }
   // keyToCheck = "baseStyle" | "variants" | "sizes"
   if (item.meta.path.includes(keyToCheck)) {
-    if (isWeb() && !item.meta.path.includes('state')) {
+    if (!item.meta.path.includes('state')) {
       if (!ret.ids) {
         ret.ids = [];
       }

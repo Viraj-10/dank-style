@@ -1,5 +1,3 @@
-import { Dimensions, Platform } from 'react-native';
-
 export function getClosestBreakpoint(
   values: Record<string, any>,
   point: number
@@ -82,7 +80,7 @@ function getWidthFromMediaQuery(condition: string) {
 }
 
 function isValidBreakpoint(config: any, queryCondition: any) {
-  const windowWidth = Dimensions.get('window')?.width;
+  const windowWidth = window.innerWidth;
 
   const currentBreakpointValue = getClosestBreakpointValue(
     config.tokens.mediaQueries,
@@ -109,28 +107,24 @@ export function generateStylePropsFromCSSIds(
   const styleObj: any = [];
   let styleCSSIdsString: any = '';
 
-  if (Platform.OS !== 'web') {
-    styleCSSIds.forEach((cssId: any) => {
-      if (globalStyleMap.get(cssId)) {
-        // check for queryCondtion
-        if (globalStyleMap.get(cssId).meta.queryCondition) {
-          if (
-            isValidBreakpoint(
-              config,
-              globalStyleMap.get(cssId).meta.queryCondition
-            )
-          ) {
-            styleObj.push(globalStyleMap.get(cssId).resolved);
-          }
-        } else {
+  styleCSSIds.forEach((cssId: any) => {
+    if (globalStyleMap.get(cssId)) {
+      // check for queryCondtion
+      if (globalStyleMap.get(cssId).meta.queryCondition) {
+        if (
+          isValidBreakpoint(
+            config,
+            globalStyleMap.get(cssId).meta.queryCondition
+          )
+        ) {
           styleObj.push(globalStyleMap.get(cssId).resolved);
         }
-        //
+      } else {
+        styleObj.push(globalStyleMap.get(cssId).resolved);
       }
-    });
-  } else {
-    styleCSSIdsString = styleCSSIds.join(' ');
-  }
+      //
+    }
+  });
 
   return {
     'dataSet': {
